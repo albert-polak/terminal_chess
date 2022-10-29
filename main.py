@@ -1,76 +1,82 @@
 import copy
 
+# Main class
 class Chessboard:
     def __init__(self):
-        self.board = [[0 for i in range(8)] for j in range(8)]
-        self.board[0][0] = 1
-        self.board[0][1] = 2
-        self.board[0][2] = 3
-        self.board[0][3] = 4
-        self.board[0][4] = 5
-        self.board[0][5] = 3
-        self.board[0][6] = 2
-        self.board[0][7] = 1
+        # Filling chessboard with pieces
+        self.board = [[(0, 0) for i in range(8)] for j in range(8)]
+        # Tuple of (type_of_piece, color)
+        self.board[0][0] = (1, 'B')
+        self.board[0][1] = (2, 'B')
+        self.board[0][2] = (3, 'B')
+        self.board[0][3] = (4, 'B')
+        self.board[0][4] = (5, 'B')
+        self.board[0][5] = (3, 'B')
+        self.board[0][6] = (2, 'B')
+        self.board[0][7] = (1, 'B')
 
-        self.board[1][0] = 6
-        self.board[1][1] = 6
-        self.board[1][2] = 6
-        self.board[1][3] = 6
-        self.board[1][4] = 6
-        self.board[1][5] = 6
-        self.board[1][6] = 6
-        self.board[1][7] = 6
+        self.board[1][0] = (6, 'B')
+        self.board[1][1] = (6, 'B')
+        self.board[1][2] = (6, 'B')
+        self.board[1][3] = (6, 'B')
+        self.board[1][4] = (6, 'B')
+        self.board[1][5] = (6, 'B')
+        self.board[1][6] = (6, 'B')
+        self.board[1][7] = (6, 'B')
 
-        self.board[7][0] = 1
-        self.board[7][1] = 2
-        self.board[7][2] = 3
-        self.board[7][3] = 4
-        self.board[7][4] = 5
-        self.board[7][5] = 3
-        self.board[7][6] = 2
-        self.board[7][7] = 1
+        self.board[7][0] = (1, 'W')
+        self.board[7][1] = (2, 'W')
+        self.board[7][2] = (3, 'W')
+        self.board[7][3] = (4, 'W')
+        self.board[7][4] = (5, 'W')
+        self.board[7][5] = (3, 'W')
+        self.board[7][6] = (2, 'W')
+        self.board[7][7] = (1, 'W')
 
-        self.board[6][0] = 6
-        self.board[6][1] = 6
-        self.board[6][2] = 6
-        self.board[6][3] = 6
-        self.board[6][4] = 6
-        self.board[6][5] = 6
-        self.board[6][6] = 6
-        self.board[6][7] = 6
+        self.board[6][0] = (6, 'W')
+        self.board[6][1] = (6, 'W')
+        self.board[6][2] = (6, 'W')
+        self.board[6][3] = (6, 'W')
+        self.board[6][4] = (6, 'W')
+        self.board[6][5] = (6, 'W')
+        self.board[6][6] = (6, 'W')
+        self.board[6][7] = (6, 'W')
 
-        self.knight_move_matrix = [[0, 1, 0, 1, 0], 
-                                    [1, 0, 0, 0, 1], 
-                                    [0, 0, 0, 0, 0], 
-                                    [1, 0, 0, 0, 1], 
-                                    [0, 1, 0, 1, 0]]
+        # Available moves for knight matrix 
+        self.knight_move_matrix = [[0, 1, 0, 1, 0],
+                                   [1, 0, 0, 0, 1],
+                                   [0, 0, 0, 0, 0],
+                                   [1, 0, 0, 0, 1],
+                                   [0, 1, 0, 1, 0]]
+
         self.previous_board = copy.deepcopy(self.board)
 
+    # Drawing the chessboard in terminal
     def draw_chessboard(self):
         print("  A   B   C   D   E   F   G   H")
         print('---------------------------------')
         for i in range(8):
             for j in range(8):
                 print('|', end=' ')
-                if self.board[i][j] == 0:
+                if self.board[i][j][0] == 0:
                     print(' ', end=' ')
-                elif self.board[i][j] == 1:
+                elif self.board[i][j][0] == 1:
                     print('R', end=' ')
-                elif self.board[i][j] == 2:
+                elif self.board[i][j][0] == 2:
                     print('N', end=' ')
-                elif self.board[i][j] == 3:
+                elif self.board[i][j][0] == 3:
                     print('B', end=' ')
-                elif self.board[i][j] == 4:
+                elif self.board[i][j][0] == 4:
                     print('Q', end=' ')
-                elif self.board[i][j] == 5:
+                elif self.board[i][j][0] == 5:
                     print('K', end=' ')
-                elif self.board[i][j] == 6:
+                elif self.board[i][j][0] == 6:
                     print('P', end=' ')
             print('|', end=' ')
             print(8-i)
             print('---------------------------------')
 
-    def move(self, start, end):
+    def move(self, start, end, color):
         start = start.upper()
         end = end.upper()
         if start[0] == 'A':
@@ -110,6 +116,8 @@ class Chessboard:
             end_x = 7
         else:
             print('Impossible move!')
+
+        # Preventing incorrect notation
         try:
             start_y = 8 - int(start[1])
             end_y = 8 - int(end[1])
@@ -117,56 +125,117 @@ class Chessboard:
             start_tuple = (start_x, start_y)
             end_tuple = (end_x, end_y)
 
-            if self.check_if_legal(start_tuple, end_tuple):
+            if self.check_if_legal(start_tuple, end_tuple, color):
                 self.previous_board = copy.deepcopy(self.board)
                 self.board[end_y][end_x] = self.board[start_y][start_x]
-                self.board[start_y][start_x] = 0 
+                self.board[start_y][start_x] = (0, 0)
             else:
                 print('Impossible move!')
+                return False
         except:
             print('Wrong move!')
-            
-    def check_if_legal(self, start, end):
-        y_move = end[1]-start[1]
+            return False
+        return True
+
+    # Checking if a move is legal for each piece
+    def check_if_legal(self, start, end, color):
+        y_move = end[1] - start[1]
         x_move = end[0] - start[0]
+
+        # Checking boundaries
         if 7 < start[0] < 0 or 7 < start[1] < 0 or 7 < end[0] < 0 or 7 < end[1] < 0:
             return False
-        elif self.board[start[1]][start[0]] == 0:
+        # Checking if correct color is being moved
+        elif self.board[start[1]][start[0]][1] != color:
             return False
-        elif self.board[start[1]][start[0]] == 1:
+        # Checking of starting position isn't empty
+        elif self.board[start[1]][start[0]][0] == 0:
+            return False
+        # Checking if the move is right for a Rook
+        elif self.board[start[1]][start[0]][0] == 1:
             if start[0]-end[0] != 0 and start[1]-end[1] != 0:
                 return False
-            else: 
+            else:
                 return True
-        elif self.board[start[1]][start[0]] == 2:
+        # Cheking if the move is right for a Knight
+        elif self.board[start[1]][start[0]][0] == 2:
             if self.knight_move_matrix[2+y_move][2+x_move] == 1:
                 return True
-            else: 
+            else:
                 return False
-        elif self.board[start[1]][start[0]] == 3:
+        # Cheking if the move is right for a Bishop
+        elif self.board[start[1]][start[0]][0] == 3:
             if abs(y_move) == abs(x_move) and x_move != 0:
                 return True
-            else: 
+            else:
                 return False
-        elif self.board[start[1]][start[0]] == 4:
+        # Cheking if the move is right for the Queen
+        elif self.board[start[1]][start[0]][0] == 4:
             if (abs(y_move) == abs(x_move) and x_move != 0) or start[0]-end[0] == 0 and start[1]-end[1] == 0:
                 return True
-            else: 
+            else:
                 return False
-        elif self.board[start[1]][start[0]] == 5:
+        # Cheking if the move is right for the King
+        elif self.board[start[1]][start[0]][0] == 5:
             if abs(x_move) <= 1 and abs(y_move) <= 1:
                 return True
-            else: 
+            else:
                 return False
-        elif self.board[start[1]][start[0]] == 6:
-            return True
+        # Cheking if the move is right for a Pawn
+        elif self.board[start[1]][start[0]][0] == 6:
+            if self.board[start[1]][start[0]][1] == 'W':
+                if 8-start[1] == 2:
+                    if x_move == 0:
+                        if 0 < -y_move <= 2 and self.board[end[1]][end[0]][0] == 0:
+                            return True
+                        else:
+                            return False
+                    elif abs(x_move) == 1 and -y_move == 1:
+                        if self.board[end[1]][end[0]][0] != 0:
+                            return True
+                        else:
+                            return False
+
+                else:
+                    if x_move == 0:
+                        if 0 < -y_move <= 1 and self.board[end[1]][end[0]][0] == 0:
+                            return True
+                        else:
+                            return False
+                    elif abs(x_move) == 1 and -y_move == 1:
+                        if self.board[end[1]][end[0]][0] != 0:
+                            return True
+                        else:
+                            return False
+            if self.board[start[1]][start[0]][1] == 'B':
+                if 8-start[1] == 7:
+                    if x_move == 0:
+                        if 0 > -y_move >= -2 and self.board[end[1]][end[0]][0] == 0:
+                            return True
+                        else:
+                            return False
+                    elif abs(x_move) == 1 and -y_move == -1:
+                        if self.board[end[1]][end[0]][0] != 0:
+                            return True
+                        else:
+                            return False
+
+                else:
+                    if x_move == 0:
+                        if 0 > -y_move >= -1 and self.board[end[1]][end[0]][0] == 0:
+                            return True
+                        else:
+                            return False
+                    elif abs(x_move) == 1 and -y_move == -1:
+                        if self.board[end[1]][end[0]][0] != 0:
+                            return True
+                        else:
+                            return False
         else:
             return True
 
     def undo(self):
-        self.board = self.previous_board 
-
-
+        self.board = self.previous_board
 
 
 if __name__ == "__main__":
@@ -174,11 +243,36 @@ if __name__ == "__main__":
     chessboard.draw_chessboard()
 
     while True:
-        start = input("Start: ")
+        start = input("White start: ")
         if start == 'previous':
             chessboard.undo()
             chessboard.draw_chessboard()
             continue
-        end = input("End: ")
-        chessboard.move(start, end)
+        end = input("White end: ")
+
+        while not chessboard.move(start, end, 'W'):
+            start = input("White start: ")
+            if start == 'previous':
+                chessboard.undo()
+                chessboard.draw_chessboard()
+                continue
+            end = input("White end: ")
+        
+        chessboard.draw_chessboard()
+
+        start = input("Black start: ")
+        if start == 'previous':
+            chessboard.undo()
+            chessboard.draw_chessboard()
+            continue
+        end = input("Black end: ")
+
+        while not chessboard.move(start, end, 'B'):
+            start = input("Black start: ")
+            if start == 'previous':
+                chessboard.undo()
+                chessboard.draw_chessboard()
+                continue
+            end = input("Black end: ")
+        
         chessboard.draw_chessboard()
