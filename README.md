@@ -1,2 +1,2 @@
-# console_chess
-Simple two-player console chess.
+# terminal_chess
+Simple chess playable in terminal.
