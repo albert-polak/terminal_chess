@@ -1,4 +1,4 @@
-
+import copy
 
 class Chessboard:
     def __init__(self):
@@ -44,6 +44,7 @@ class Chessboard:
                                     [0, 0, 0, 0, 0], 
                                     [1, 0, 0, 0, 1], 
                                     [0, 1, 0, 1, 0]]
+        self.previous_board = copy.deepcopy(self.board)
 
     def draw_chessboard(self):
         print("  A   B   C   D   E   F   G   H")
@@ -117,6 +118,7 @@ class Chessboard:
             end_tuple = (end_x, end_y)
 
             if self.check_if_legal(start_tuple, end_tuple):
+                self.previous_board = copy.deepcopy(self.board)
                 self.board[end_y][end_x] = self.board[start_y][start_x]
                 self.board[start_y][start_x] = 0 
             else:
@@ -161,6 +163,8 @@ class Chessboard:
         else:
             return True
 
+    def undo(self):
+        self.board = self.previous_board 
 
 
 
@@ -171,6 +175,10 @@ if __name__ == "__main__":
 
     while True:
         start = input("Start: ")
+        if start == 'previous':
+            chessboard.undo()
+            chessboard.draw_chessboard()
+            continue
         end = input("End: ")
         chessboard.move(start, end)
         chessboard.draw_chessboard()
