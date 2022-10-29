@@ -88,7 +88,8 @@ class Chessboard:
             start_x = 6
         elif start[0] == 'H':
             start_x = 7
-        start_y = 8 - int(start[1])
+        else:
+            print('Impossible move!')
 
         if end[0] == 'A':
             end_x = 0
@@ -106,19 +107,29 @@ class Chessboard:
             end_x = 6
         elif end[0] == 'H':
             end_x = 7
-        end_y = 8 - int(end[1])
-
-        start_tuple = (start_x, start_y)
-        end_tuple = (end_x, end_y)
-
-        if self.check_if_legal(start_tuple, end_tuple):
-            self.board[end_y][end_x] = self.board[start_y][start_x]
-            self.board[start_y][start_x] = 0 
         else:
             print('Impossible move!')
+        try:
+            start_y = 8 - int(start[1])
+            end_y = 8 - int(end[1])
 
+            start_tuple = (start_x, start_y)
+            end_tuple = (end_x, end_y)
+
+            if self.check_if_legal(start_tuple, end_tuple):
+                self.board[end_y][end_x] = self.board[start_y][start_x]
+                self.board[start_y][start_x] = 0 
+            else:
+                print('Impossible move!')
+        except:
+            print('Wrong move!')
+            
     def check_if_legal(self, start, end):
-        if self.board[start[1]][start[0]] == 0:
+        y_move = end[1]-start[1]
+        x_move = end[0] - start[0]
+        if 7 < start[0] < 0 or 7 < start[1] < 0 or 7 < end[0] < 0 or 7 < end[1] < 0:
+            return False
+        elif self.board[start[1]][start[0]] == 0:
             return False
         elif self.board[start[1]][start[0]] == 1:
             if start[0]-end[0] != 0 and start[1]-end[1] != 0:
@@ -126,8 +137,6 @@ class Chessboard:
             else:
                 return True
         elif self.board[start[1]][start[0]] == 2:
-            y_move = end[1]-start[1]
-            x_move = end[0] - start[0]
             if self.knight_move_matrix[2+y_move][2+x_move] == 1:
                 return True
             else:
