@@ -134,13 +134,30 @@ class Chessboard:
         elif self.board[start[1]][start[0]] == 1:
             if start[0]-end[0] != 0 and start[1]-end[1] != 0:
                 return False
-            else:
+            else: 
                 return True
         elif self.board[start[1]][start[0]] == 2:
             if self.knight_move_matrix[2+y_move][2+x_move] == 1:
                 return True
-            else:
+            else: 
                 return False
+        elif self.board[start[1]][start[0]] == 3:
+            if abs(y_move) == abs(x_move) and x_move != 0:
+                return True
+            else: 
+                return False
+        elif self.board[start[1]][start[0]] == 4:
+            if (abs(y_move) == abs(x_move) and x_move != 0) or start[0]-end[0] == 0 and start[1]-end[1] == 0:
+                return True
+            else: 
+                return False
+        elif self.board[start[1]][start[0]] == 5:
+            if abs(x_move) <= 1 and abs(y_move) <= 1:
+                return True
+            else: 
+                return False
+        elif self.board[start[1]][start[0]] == 6:
+            return True
         else:
             return True
 
