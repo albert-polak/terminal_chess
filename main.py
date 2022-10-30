@@ -137,10 +137,82 @@ class Chessboard:
             return False
         return True
 
+
+    def check_if_blocked(self, start, end, color):
+        # Checking if a piece is in the way
+        y_move = end[1] - start[1]
+        x_move = end[0] - start[0]
+        if x_move == 0:
+            if y_move > 0:
+                for i in range(start[1]+1, end[1]+1):
+                    if self.board[i][start[0]][0] != 0 and self.board[i][start[0]][1] == color:
+                        return False
+                    elif self.board[i][start[0]][0] != 0 and i != end[1]:
+                        return False
+                return True
+            else:
+                for i in range(start[1]-1, end[1]-1, -1):
+                    if self.board[i][start[0]][0] != 0 and self.board[i][start[0]][1] == color:
+                        return False
+                    elif self.board[i][start[0]][0] != 0 and i != end[1]:
+                        return False
+                return True
+        elif y_move == 0:
+            if x_move > 0:
+                for i in range(start[0]+1, end[0]+1):
+                    if self.board[start[1]][i][0] != 0 and self.board[start[1]][i][1] == color:
+                        return False
+                    elif self.board[start[1]][i][0] != 0 and i != end[0]:
+                        return False
+                return True
+            else:
+                for i in range(start[0]-1, end[0]-1, -1):
+                    if self.board[start[1]][i][0] != 0 and self.board[start[1]][i][1] == color:
+                        return False
+                    elif self.board[start[1]][i][0] != 0 and i != end[0]:
+                        return False
+                return True
+        elif abs(x_move) == abs(y_move):
+            if x_move > 0:
+                if y_move > 0:
+                    for i in range(1, x_move+1):
+                        if self.board[start[1]+i][start[0]+i][0] != 0 and self.board[start[1]+i][start[0]+i][1] == color:
+                            return False
+                        elif self.board[start[1]+i][start[0]+i][0] != 0 and i != x_move:
+                            return False
+                    return True
+                else:
+                    for i in range(1, x_move+1):
+                        if self.board[start[1]-i][start[0]+i][0] != 0 and self.board[start[1]-i][start[0]+i][1] == color:
+                            return False
+                        elif self.board[start[1]-i][start[0]+i][0] != 0 and i != x_move:
+                            return False
+                    return True
+            else:
+                if y_move > 0:
+                    for i in range(1, abs(x_move)+1):
+                        if self.board[start[1]+i][start[0]-i][0] != 0 and self.board[start[1]+i][start[0]-i][1] == color:
+                            return False
+                        elif self.board[start[1]+i][start[0]-i][0] != 0 and i != abs(x_move):
+                            return False
+                    return True
+                else:
+                    for i in range(1, abs(x_move)+1):
+                        if self.board[start[1]-i][start[0]-i][0] != 0 and self.board[start[1]-i][start[0]-i][1] == color:
+                            return False
+                        elif self.board[start[1]-i][start[0]-i][0] != 0 and i != abs(x_move):
+                            return False
+                    return True
+        else:
+            return False
+
+
     # Checking if a move is legal for each piece
     def check_if_legal(self, start, end, color):
         y_move = end[1] - start[1]
         x_move = end[0] - start[0]
+
+
 
         # Checking boundaries
         if 7 < start[0] < 0 or 7 < start[1] < 0 or 7 < end[0] < 0 or 7 < end[1] < 0:
@@ -155,8 +227,9 @@ class Chessboard:
         elif self.board[start[1]][start[0]][0] == 1:
             if start[0]-end[0] != 0 and start[1]-end[1] != 0:
                 return False
-            else:
+            elif self.check_if_blocked(start, end, color):
                 return True
+            else: return False
         # Cheking if the move is right for a Knight
         elif self.board[start[1]][start[0]][0] == 2:
             if self.knight_move_matrix[2+y_move][2+x_move] == 1:
@@ -166,12 +239,17 @@ class Chessboard:
         # Cheking if the move is right for a Bishop
         elif self.board[start[1]][start[0]][0] == 3:
             if abs(y_move) == abs(x_move) and x_move != 0:
-                return True
+                if self.check_if_blocked(start, end, color):
+                    return True
+                else:
+                    return False
             else:
                 return False
         # Cheking if the move is right for the Queen
         elif self.board[start[1]][start[0]][0] == 4:
-            if (abs(y_move) == abs(x_move) and x_move != 0) or start[0]-end[0] == 0 and start[1]-end[1] == 0:
+            if (abs(y_move) == abs(x_move) and x_move != 0) or start[0]-end[0] == 0 or start[1]-end[1] == 0:
+                return True
+            elif self.check_if_blocked(start, end, color):
                 return True
             else:
                 return False
