@@ -212,6 +212,17 @@ class Chessboard:
         else:
             return False
 
+    def check_if_under_attack(self, end, color):
+        # Cheking if the end position is under attack
+        for j in range(8):
+            for i in range(8):
+                y = 7 - j
+                x = i
+                if self.board[y][x][1] != color:
+                    if self.check_if_legal((x, y), end, self.board[y][x][1]):
+                        return True
+
+        return False
 
     # Checking if a move is legal for each piece
     def check_if_legal(self, start, end, color):
@@ -238,8 +249,9 @@ class Chessboard:
             else: return False
         # Cheking if the move is right for a Knight
         elif self.board[start[1]][start[0]][0] == 2:
-            if self.knight_move_matrix[2+y_move][2+x_move] == 1:
-                return True
+            if 0 <= y_move + 2 < len(self.knight_move_matrix) and 0 <= x_move + 2 < len(self.knight_move_matrix[0]):
+                if self.knight_move_matrix[2+y_move][2+x_move] == 1:
+                    return True
             else:
                 return False
         # Cheking if the move is right for a Bishop
@@ -263,7 +275,14 @@ class Chessboard:
         # Cheking if the move is right for the King
         elif self.board[start[1]][start[0]][0] == 5:
             if abs(x_move) <= 1 and abs(y_move) <= 1:
-                return True
+                # Cheking if the end position is under attack
+                if self.check_if_under_attack(end, color):
+                    return False
+                elif self.check_if_blocked(start, end, color):
+                    return True
+                else:
+                    return False
+
             else:
                 return False
         # Cheking if the move is right for a Pawn
