@@ -79,46 +79,46 @@ class Chessboard:
     def move(self, start, end, color):
         start = start.upper()
         end = end.upper()
-        if start[0] == 'A':
-            start_x = 0
-        elif start[0] == 'B':
-            start_x = 1
-        elif start[0] == 'C':
-            start_x = 2
-        elif start[0] == 'D':
-            start_x = 3
-        elif start[0] == 'E':
-            start_x = 4
-        elif start[0] == 'F':
-            start_x = 5
-        elif start[0] == 'G':
-            start_x = 6
-        elif start[0] == 'H':
-            start_x = 7
-        else:
-            print('Impossible move!')
-
-        if end[0] == 'A':
-            end_x = 0
-        elif end[0] == 'B':
-            end_x = 1
-        elif end[0] == 'C':
-            end_x = 2
-        elif end[0] == 'D':
-            end_x = 3
-        elif end[0] == 'E':
-            end_x = 4
-        elif end[0] == 'F':
-            end_x = 5
-        elif end[0] == 'G':
-            end_x = 6
-        elif end[0] == 'H':
-            end_x = 7
-        else:
-            print('Impossible move!')
-
-        # Preventing incorrect notation
         try:
+            # Preventing incorrect notation
+            if start[0] == 'A':
+                start_x = 0
+            elif start[0] == 'B':
+                start_x = 1
+            elif start[0] == 'C':
+                start_x = 2
+            elif start[0] == 'D':
+                start_x = 3
+            elif start[0] == 'E':
+                start_x = 4
+            elif start[0] == 'F':
+                start_x = 5
+            elif start[0] == 'G':
+                start_x = 6
+            elif start[0] == 'H':
+                start_x = 7
+            else:
+                print('Impossible move!')
+
+            if end[0] == 'A':
+                end_x = 0
+            elif end[0] == 'B':
+                end_x = 1
+            elif end[0] == 'C':
+                end_x = 2
+            elif end[0] == 'D':
+                end_x = 3
+            elif end[0] == 'E':
+                end_x = 4
+            elif end[0] == 'F':
+                end_x = 5
+            elif end[0] == 'G':
+                end_x = 6
+            elif end[0] == 'H':
+                end_x = 7
+            else:
+                print('Impossible move!')
+
             start_y = 8 - int(start[1])
             end_y = 8 - int(end[1])
 
