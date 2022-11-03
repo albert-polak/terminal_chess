@@ -248,9 +248,10 @@ class Chessboard:
         # Cheking if the move is right for the Queen
         elif self.board[start[1]][start[0]][0] == 4:
             if (abs(y_move) == abs(x_move) and x_move != 0) or start[0]-end[0] == 0 or start[1]-end[1] == 0:
-                return True
-            elif self.check_if_blocked(start, end, color):
-                return True
+                if self.check_if_blocked(start, end, color):
+                    return True
+                else:
+                    return False
             else:
                 return False
         # Cheking if the move is right for the King
