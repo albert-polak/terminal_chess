@@ -51,6 +51,12 @@ class Chessboard:
 
         self.previous_board = copy.deepcopy(self.board)
 
+        self.undo_flag = False
+
+        self.white_king_pos = (4, 7)
+        self.black_king_pos = (4, 0)
+        
+
     # Drawing the chessboard in terminal
     def draw_chessboard(self):
         print("  A   B   C   D   E   F   G   H")
@@ -221,18 +227,28 @@ class Chessboard:
                 if self.board[y][x][1] != color:
                     if self.check_if_legal((x, y), end, self.board[y][x][1]):
                         return True
+                        print('Would be under attack!')
 
         return False
+
+    def check_if_king_under_attack(self, color):
+        if color == 'W':
+            if self.check_if_under_attack(self.white_king_pos, color):
+                return True
+        else:
+            if self.check_if_under_attack(self.black_king_pos, color):
+                return True
 
     # Checking if a move is legal for each piece
     def check_if_legal(self, start, end, color):
         y_move = end[1] - start[1]
         x_move = end[0] - start[0]
 
-
-
+        
+        if start == end:
+            return False
         # Checking boundaries
-        if 7 < start[0] < 0 or 7 < start[1] < 0 or 7 < end[0] < 0 or 7 < end[1] < 0:
+        elif 7 < start[0] < 0 or 7 < start[1] < 0 or 7 < end[0] < 0 or 7 < end[1] < 0:
             return False
         # Checking if correct color is being moved
         elif self.board[start[1]][start[0]][1] != color:
@@ -279,6 +295,10 @@ class Chessboard:
                 if self.check_if_under_attack(end, color):
                     return False
                 elif self.check_if_blocked(start, end, color):
+                    if color == 'W':
+                        self.white_king = end
+                    else:
+                        self.black_king = end
                     return True
                 else:
                     return False
@@ -342,30 +362,40 @@ class Chessboard:
         self.board = self.previous_board
 
 
+
 if __name__ == "__main__":
     chessboard = Chessboard()
     chessboard.draw_chessboard()
 
     while True:
-        start = input("White start: ")
-        if start == 'previous':
-            chessboard.undo()
-            chessboard.draw_chessboard()
-            continue
-        end = input("White end: ")
-
-        while not chessboard.move(start, end, 'W'):
+        if not chessboard.undo_flag:
             start = input("White start: ")
-            if start == 'previous':
+            if start == 'undo':
                 chessboard.undo()
+                chessboard.undo_flag = True
+
                 chessboard.draw_chessboard()
                 continue
             end = input("White end: ")
-        
-        chessboard.draw_chessboard()
 
+            while not chessboard.move(start, end, 'W'):
+                start = input("White start: ")
+                if start == 'undo':
+                    chessboard.undo()
+                    chessboard.undo_flag = True
+                    chessboard.draw_chessboard()
+                    continue
+                end = input("White end: ")
+            if chessboard.check_if_king_under_attack('W'):
+                print("White is under attack")
+                chessboard.undo()
+
+            
+            chessboard.draw_chessboard()
+        
+        chessboard.undo_flag = False
         start = input("Black start: ")
-        if start == 'previous':
+        if start == 'undo':
             chessboard.undo()
             chessboard.draw_chessboard()
             continue
@@ -373,10 +403,15 @@ if __name__ == "__main__":
 
         while not chessboard.move(start, end, 'B'):
             start = input("Black start: ")
-            if start == 'previous':
+            if start == 'undo':
                 chessboard.undo()
                 chessboard.draw_chessboard()
                 continue
             end = input("Black end: ")
+
+        if chessboard.check_if_king_under_attack('B'):
+            print("Black is under attack")
+            chessboard.undo()
+            chessboard.undo_flag = True
         
         chessboard.draw_chessboard()
