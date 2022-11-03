@@ -127,7 +127,13 @@ class Chessboard:
 
             if self.check_if_legal(start_tuple, end_tuple, color):
                 self.previous_board = copy.deepcopy(self.board)
-                self.board[end_y][end_x] = self.board[start_y][start_x]
+                # Checking if the pawn is on the last row
+                if self.board[start_tuple[1]][start_tuple[0]][0] == 6 and end_tuple[1] == 0:
+                    self.board[end_tuple[1]][end_tuple[0]] = (4, color)
+                elif self.board[start_tuple[1]][start_tuple[0]][0] == 6 and end_tuple[1] == 7:
+                    self.board[end_tuple[1]][end_tuple[0]] = (4, color)
+                else:
+                    self.board[end_y][end_x] = self.board[start_y][start_x]
                 self.board[start_y][start_x] = (0, 0)
             else:
                 print('Impossible move!')
